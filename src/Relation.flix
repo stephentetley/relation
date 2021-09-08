@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-namespace Relation/Relation {
+
+namespace RelLib/Relation {
 
     pub def when(test: Bool, reln: #{| r}): #{| r} = match test {
         case true => reln

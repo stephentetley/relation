@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Relation/Tuple {
+namespace RelLib/Tuple {
 
     pub def decons2(f: (u1, u2) -> a & ef, x: (u1, u2)): a & ef = 
         let (x1, x2) = x;

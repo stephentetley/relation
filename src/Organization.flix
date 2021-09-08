@@ -15,7 +15,7 @@
  */
 
 
-namespace Relation/Organization {
+namespace RelLib/Organization {
     
     /// pub def groupBy(f: (a, a) -> Bool, a: Array[a]): Array[Array[a]] & Impure =
 

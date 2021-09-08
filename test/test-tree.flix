@@ -1,8 +1,8 @@
 use Data.RoseTree;
 use Data.RoseTree.{RoseTree};
 
-use Relation/Tree.Level3;
-use Relation/Tree.Level3.{RootOf3, Level1Of3, Level2Of3, Level3Of3};
+use RelLib/Tree.Level3;
+use RelLib/Tree.Level3.{RootOf3, Level1Of3, Level2Of3, Level3Of3};
 
 def main(_args: Array[String]): Int32 & Impure = 
     Console.printLine("Running...");
@@ -24,7 +24,7 @@ rel PumpId(name: String, ident: String)
 
 def test01(): Unit & Impure = 
     query rules() select (x1, x2) from Organization(x1, x2)
-        |> Relation/Tree.printAsTree2
+        |> RelLib/Tree.printAsTree2
 
 
 def rules(): #{Organization, Pump, PumpSet, PumpId |r} =  #{
