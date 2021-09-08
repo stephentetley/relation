@@ -79,7 +79,7 @@ namespace RelLib/Tree {
     pub def tree3(arr: Array[(a, b, c)]): RoseTree[Level3[a, b, c]] & Impure with Order[a], Order[b]  = 
         let getKey  = RelLib/Tuple.decons3((x1, _, _) -> x1);
         let getBody = RelLib/Tuple.decons3((_, x2, x3) -> (x2, x3));
-        let groups  = Loading/Organization.collectToMapList(getKey, getBody, arr);
+        let groups  = RelLib/Organization.collectToMapList(getKey, getBody, arr);
         let kids    = genKids2((x1, ks) -> RoseTree(Level1Of3(x1), tree3GenLevel2(List.toArray(ks))), groups);
         RoseTree(RootOf3, kids)
 
