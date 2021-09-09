@@ -19,6 +19,9 @@ namespace RelLib/Tree {
     use Data.RoseTree;
     use Data.RoseTree.{RoseTree};
 
+
+    /// Tree2
+
     pub enum Level2[a, b] { 
         case RootOf2
         case Level1Of2(a)
@@ -59,6 +62,7 @@ namespace RelLib/Tree {
             |> drawTree2("Root") 
             |> println
 
+    /// Tree3
 
     pub enum Level3[a, b, c] { 
         case RootOf3
@@ -101,6 +105,58 @@ namespace RelLib/Tree {
         tree3(arr) 
             |> drawTree3("Root") 
             |> println
+
+    /// Tree4
+
+    pub enum Level4[a, b, c, d] { 
+        case RootOf4
+        case Level1Of4(a)
+        case Level2Of4(b)
+        case Level3Of4(c)
+        case Level4Of4(d)
+    }
+
+    instance ToString[Level4[a, b, c, d]] with ToString[a], ToString[b], ToString[c], ToString[d] {
+        pub def toString(x: Level4[a, b, c, d]): String = match x {
+            case RootOf4 => "RootOf4"
+            case Level1Of4(a) => "Level1Of4(${a})"
+            case Level2Of4(b) => "Level2Of4(${b})"
+            case Level3Of4(c) => "Level3Of4(${c})"
+            case Level4Of4(c) => "Level3Of4(${c})"
+        }
+    }
+
+    pub def tree4(arr: Array[(a, b, c, d)]): RoseTree[Level4[a, b, c, d]] & Impure with Order[a], Order[b], Order[c]  = 
+        let getKey  = RelLib/Tuple.decons4((x1, _, _, _) -> x1);
+        let getBody = RelLib/Tuple.decons4((_, x2, x3, x4) -> (x2, (x3, x4)));
+        let groups  = RelLib/Organization.collectToMapList(getKey, getBody, arr);
+        let kids    = genKids2((x1, ks) -> RoseTree(Level1Of4(x1), tree4GenLevel2(List.toArray(ks))), groups);
+        RoseTree(RootOf4, kids)
+
+    def tree4GenLevel2(arr: Array[(b, (c, d))]): List[RoseTree[Level4[a, b, c, d]]] & Impure with Order[b], Order[c] = 
+        let groups = RelLib/Organization.collectToMapList(fst, snd, arr); 
+        genKids2((x1, kids) -> RoseTree(Level2Of4(x1), tree4GenLevel3(List.toArray(kids))), groups)
+
+    def tree4GenLevel3(arr: Array[(c, d)]): List[RoseTree[Level4[a, b, c, d]]] & Impure with  Order[c] = 
+        let groups = RelLib/Organization.collectToMapList(fst, snd, arr); 
+        genKids2((x1, kids) -> RoseTree(Level3Of4(x1), List.map(x2 -> RoseTree(Level4Of4(x2), Nil), kids)), groups)
+
+    pub def drawTree4(rootLabel: String, tree: RoseTree[Level4[a, b, c, d]]): String with ToString[a], ToString[b], ToString[c], ToString[d] = 
+        let nodeToString = x1 -> match x1 { 
+            case RootOf4 => rootLabel
+            case Level1Of4(a) => ToString.toString(a)
+            case Level2Of4(b) => ToString.toString(b)
+            case Level3Of4(c) => ToString.toString(c)
+            case Level4Of4(d) => ToString.toString(d)
+        };
+        Data/RoseTree.map(nodeToString, tree)
+            |> Data/RoseTree.drawTree
+
+    pub def printAsTree4(arr: Array[(a, b, c, d)]): Unit & Impure with Order[a], Order[b], Order[c], ToString[a], ToString[b], ToString[c], ToString[d] = 
+        tree4(arr) 
+            |> drawTree4("Root") 
+            |> println
+
 }
     
 

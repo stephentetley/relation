@@ -8,7 +8,8 @@ def main(_args: Array[String]): Int32 & Impure =
     Console.printLine("Running...");
     test01();
     Data/RoseTree.map(ToString.toString, t1()) |> Data/RoseTree.drawTree |> println;
-    [("A", "B1", "X"), ("A", "B2", "Y")] |> Relation/Tree.printAsTree3;
+    [("A", "B1", "X"), ("A", "B2", "Y")] |> RelLib/Tree.printAsTree3;
+    [("Top", "B1", "X", 100), ("Top", "B1", "Y", 101)] |> RelLib/Tree.printAsTree4;
     0
 
 
