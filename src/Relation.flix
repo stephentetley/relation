@@ -73,13 +73,13 @@ namespace RelLib/Relation {
     ///
     /// Returns the result of mapping each element and combining the results.
     ///
-    pub def foldMap(f: a -> #{| r}, t: t[a]): #{| r} with Foldable[t] =
+    pub def foldMap(f: a -> #{| r} & ef, t: t[a]): #{| r} & ef with Foldable[t] =
         Foldable.foldLeft((acc, x) -> acc <+> f(x), #{}, t)
 
     ///
     /// Returns the result of mapping each element and combining the results.
     ///
-    pub def foldMapWithIndex(f: (a, Int32) -> #{| r}, t: t[a]): #{| r} with Foldable[t] =
+    pub def foldMapWithIndex(f: (a, Int32) -> #{| r} & ef, t: t[a]): #{| r} & ef with Foldable[t] =
         Foldable.foldLeft((acc, x) -> {let (r1, i) = acc; (r1 <+> f(x, i), i + 1)}, (#{}, 0), t) |> fst
 
     ///
