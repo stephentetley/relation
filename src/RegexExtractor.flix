@@ -28,12 +28,17 @@ namespace RelLib/RegexExtractor {
     use Text/Regex.{Pattern};
     use RelLib.{RegexExtractor};
 
+    /// Note - this is probably not so useful. Returning a relation is a bit limited - it is probably
+    /// better to return an answer in Flix's functional world that can be combined with other values to 
+    /// make a relation.
+    /// If we do this, we aren't really delivering more that what Text/Regex.MatchEvaluator provides...
+
     ///
     /// Compile the regular expression `regex` into a Pattern.
     ///
     /// Throws an error, crashing the program if the regex is ill-formed and cannot be compiled.
     ///
-    /// Use this only for scripts that are expected to "fail fast"..
+    /// Use this only for scripts that are expected to "fail fast".
     ///
     pub def unsafeCompileRegex(regex: String): Pattern =
         match Text/Regex/Pattern.compile(regex) { 
@@ -42,15 +47,20 @@ namespace RelLib/RegexExtractor {
         }
         
 
-    /// uses `contains`...
+    /// uses `contains` - somewhere in input...
     pub def extract(extract: RegexExtractor[#{|r}], input: String): #{|r} & Impure =  
-        /// let patt   = match Text/Regex/Pattern.compile(extract.regex) {
-        ///     case Err(err) => bug!(err)
-        ///     case Ok(p1) => p1
-        /// };
         match Text/Regex.evalContains(input, extract.pattern, extract.evaluator) {
             case Err(_) => #{}
             case Ok(r1) => r1
+        }
+
+    pub def extract2(f: (a, b) -> #{|r}, extract1: RegexExtractor[a], extract2: RegexExtractor[b], input: String): #{|r} & Impure =  
+        match Text/Regex.evalContains(input, extract1.pattern, extract1.evaluator) {
+            case Err(_) => #{}
+            case Ok(a) => match Text/Regex.evalContains(input, extract2.pattern, extract2.evaluator) {
+                case Err(_) => #{}
+                case Ok(b) => f(a, b)
+            }
         }
 
 }

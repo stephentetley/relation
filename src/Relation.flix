@@ -85,16 +85,16 @@ namespace RelLib/Relation {
     ///
     /// Returns the result of mapping each element and combining the results.
     ///
-    pub def foldMapM(f: a -> Result[#{| r}, e] & ef, xs: List[a]): Result[#{| r}, e] & ef =
-        foldMapMHelper(f, xs, e -> Err(e), r1 -> Ok(r1))
+    pub def foldMapResult(f: a -> Result[#{| r}, e] & ef, xs: List[a]): Result[#{| r}, e] & ef =
+        foldMapResultHelper(f, xs, e -> Err(e), r1 -> Ok(r1))
 
-    def foldMapMHelper(f: a -> Result[#{| r}, e] & ef,
+    def foldMapResultHelper(f: a -> Result[#{| r}, e] & ef,
                         xs: List[a],
                         fk: e -> Result[#{| r}, e],
                         sk: #{| r} -> Result[#{| r}, e]): Result[#{| r}, e] & ef = match xs {
         case Nil => sk(#{})
         case x :: rs => match f(x) {
-            case Ok(r1) => foldMapMHelper(f, rs, fk, ac -> sk(ac <+> r1))
+            case Ok(r1) => foldMapResultHelper(f, rs, fk, ac -> sk(ac <+> r1))
             case Err(e) => fk(e)
         }
     }
