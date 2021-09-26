@@ -29,14 +29,15 @@ namespace RelLib/Lattice/Min {
         }
     }
 
-    instance PartialOrder[Min[a]] with Eq[a] {
+    /// Seems a bit disappointing to need Oder for Partial order, can this be improved?
+    instance PartialOrder[Min[a]] with Order[a] {
         pub def lessEqual(x: Min[a], y: Min[a]): Bool = match (x, y) { 
-            case (Min(x1), Min(y1)) => RelLib/Lattice/Dropped.lessEqualWith((a,b) -> a == b, x1, y1)
+            case (Min(x1), Min(y1)) => RelLib/Lattice/Dropped.lessEqualWith((a,b) -> a <= b, x1, y1)
         }
     }
 
     instance LowerBound[Min[a]] with LowerBound[a] {
-        pub def minValue(): Min[a] = Min(RelLib/Lattice/Dropped.minValueWith(LowerBound.minValue()))
+        pub def minValue(): Min[a] = Min(LowerBound.minValue())
     }
 
 
@@ -44,26 +45,22 @@ namespace RelLib/Lattice/Min {
         pub def maxValue(): Min[a] = Min(UpperBound.maxValue())
     }
 
-    def maxpo(x: a, y: a): a with PartialOrder[a] = 
-        if (PartialOrder.lessEqual(x, y)) y else x
-
-    def minpo(x: a, y: a): a with PartialOrder[a] = 
-        if (PartialOrder.lessEqual(x, y)) x else y
-    
-
-
-    instance JoinLattice[Min[a]] with PartialOrder[a] {
+    instance JoinLattice[Min[a]] with Order[a] {
         /// \/
-        pub def leastUpperBound(x: Min[a], y: Min[a]): Min[a] =match (x, y) {
-            case (Min(x1), Min(y1)) => Min(RelLib/Lattice/Dropped.leastUpperBoundWith(minpo, x1, y1))
-        }
+        pub def leastUpperBound(x: Min[a], y: Min[a]): Min[a] = 
+            let lub = (a, b) -> Drop(Order.min(a, b));
+            match (x, y) {
+                case (Min(x1), Min(y1)) => Min(RelLib/Lattice/Dropped.leastUpperBoundWith(lub, x1, y1))
+            }
     }
 
-    instance MeetLattice[Min[a]] with PartialOrder[a] {
+    instance MeetLattice[Min[a]] with Order[a] {
         /// /\
-        pub def greatestLowerBound(x: Min[a], y: Min[a]): Min[a] = match (x, y) {
-            case (Min(x1), Min(y1)) => Min(RelLib/Lattice/Dropped.greatestLowerBoundWith(maxpo, x1, y1))
-        }
+        pub def greatestLowerBound(x: Min[a], y: Min[a]): Min[a] = 
+            let glb = (a, b) -> Drop(Order.max(a,b));
+            match (x, y) {
+                case (Min(x1), Min(y1)) => Min(RelLib/Lattice/Dropped.greatestLowerBoundWith(glb, x1, y1))
+            }
     }
 
 }

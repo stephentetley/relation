@@ -46,18 +46,20 @@ namespace RelLib/Lattice/Constant {
     
     instance JoinLattice[Constant[a]] with Eq[a] {
         /// \/
-        pub def leastUpperBound(x: Constant[a], y: Constant[a]): Constant[a] = match (x, y) { 
-            case (Constant(x1), Constant(y1)) => 
-                Constant(RelLib/Lattice/Levitated.leastUpperBoundWith((a,b) -> if (a == b) Levitate(a) else Top, x1, y1))
-        }
+        pub def leastUpperBound(x: Constant[a], y: Constant[a]): Constant[a] = 
+            let lub = (a,b) -> if (a == b) Levitate(a) else Top;
+            match (x, y) { 
+                case (Constant(x1), Constant(y1)) => Constant(RelLib/Lattice/Levitated.leastUpperBoundWith(lub, x1, y1))
+            }
     }
 
     instance MeetLattice[Constant[a]] with Eq[a] {
         /// /\
-        pub def greatestLowerBound(x: Constant[a], y: Constant[a]): Constant[a] = match (x, y) { 
-            case (Constant(x1), Constant(y1)) => 
-                Constant(RelLib/Lattice/Levitated.greatestLowerBoundWith((a,b) -> if (a == b) Levitate(a) else Bottom, x1, y1))
-        }
+        pub def greatestLowerBound(x: Constant[a], y: Constant[a]): Constant[a] = 
+            let glb = (a,b) -> if (a == b) Levitate(a) else Bottom;
+            match (x, y) { 
+                case (Constant(x1), Constant(y1)) => Constant(RelLib/Lattice/Levitated.greatestLowerBoundWith(glb, x1, y1))
+            }
     }
 
 

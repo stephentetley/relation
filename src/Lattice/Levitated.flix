@@ -87,10 +87,10 @@ namespace RelLib/Lattice/Levitated {
         }
     }
 
-    pub def greatestLowerBoundWith(gub: (a, a) -> Levitated[a], x: Levitated[a], y: Levitated[a]): Levitated[a] = match (x, y) { 
+    pub def greatestLowerBoundWith(glb: (a, a) -> Levitated[a], x: Levitated[a], y: Levitated[a]): Levitated[a] = match (x, y) { 
             case (Top, y1) => y1
             case (x1, Top) => x1
-            case (Levitate(x1), Levitate(y1)) => gub(x1, y1)
+            case (Levitate(x1), Levitate(y1)) => glb(x1, y1)
             case (Bottom, _) => Bottom
             case (_, Bottom) => Bottom
         }

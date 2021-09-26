@@ -37,6 +37,13 @@ namespace RelLib/Lattice/Lifted {
         }
     }
 
+    pub def lessEqualWith(le: (a, a) -> Bool, x: Lifted[a], y: Lifted[a]): Bool = match (x, y) { 
+        case (Bottom, _) => true
+        case (_, Bottom) => false
+        case (Lift(x1), Lift(y1)) => le(x1, y1)
+    }
+
+
     instance LowerBound[Lifted[a]] {
         pub def minValue(): Lifted[a] = Bottom
     }
@@ -45,6 +52,10 @@ namespace RelLib/Lattice/Lifted {
         pub def maxValue(): Lifted[a] = Lift(UpperBound.maxValue())
     }
 
+
+    pub def maxValueWith(x: a): Lifted[a] = Lift(x)
+
+
     instance JoinLattice[Lifted[a]] with JoinLattice[a] {
         /// \/
         pub def leastUpperBound(x: Lifted[a], y: Lifted[a]): Lifted[a] = match (x, y) { 
@@ -52,6 +63,12 @@ namespace RelLib/Lattice/Lifted {
             case (x1, Bottom) => x1
             case (Lift(x1), Lift(y1)) => Lift(JoinLattice.leastUpperBound(x1, y1))
         }
+    }
+
+    pub def leastUpperBoundWith(lub: (a, a) -> Lifted[a], x: Lifted[a], y: Lifted[a]): Lifted[a] = match (x, y) { 
+        case (Bottom, y1) => y1
+        case (x1, Bottom) => x1
+        case (Lift(x1), Lift(y1)) => lub(x1, y1)
     }
 
     instance MeetLattice[Lifted[a]] with MeetLattice[a] {
@@ -63,5 +80,9 @@ namespace RelLib/Lattice/Lifted {
         }
     }
 
-
+    pub def greatestLowerBoundWith(glb: (a, a) -> Lifted[a], x: Lifted[a], y: Lifted[a]): Lifted[a] = match (x, y) { 
+        case (Bottom, _) => Bottom
+        case (_, Bottom) => Bottom
+        case (Lift(x1), Lift(y1)) => glb(x1, y1)
+    }
 }

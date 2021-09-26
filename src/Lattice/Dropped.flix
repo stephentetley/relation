@@ -62,10 +62,10 @@ namespace RelLib/Lattice/Dropped {
         } 
     }
 
-    pub def leastUpperBoundWith(lub: (a, a) -> a, x: Dropped[a], y: Dropped[a]): Dropped[a] = match (x, y) { 
+    pub def leastUpperBoundWith(lub: (a, a) -> Dropped[a], x: Dropped[a], y: Dropped[a]): Dropped[a] = match (x, y) { 
         case (Top, _) => Top
         case (_, Top) => Top
-        case (Drop(x1), Drop(y1)) => Drop(lub(x1, y1))
+        case (Drop(x1), Drop(y1)) => lub(x1, y1)
     } 
 
     instance MeetLattice[Dropped[a]] with MeetLattice[a] {
@@ -77,9 +77,9 @@ namespace RelLib/Lattice/Dropped {
         }
     }
 
-    pub def greatestLowerBoundWith(glb: (a, a) -> a, x: Dropped[a], y: Dropped[a]): Dropped[a] = match (x, y) { 
+    pub def greatestLowerBoundWith(glb: (a, a) -> Dropped[a], x: Dropped[a], y: Dropped[a]): Dropped[a] = match (x, y) { 
         case (Top, y1) => y1
         case (x1, Top) => x1
-        case (Drop(x1), Drop(y1)) => Drop(glb(x1, y1))
+        case (Drop(x1), Drop(y1)) => glb(x1, y1)
     }
 }
