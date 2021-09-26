@@ -1,10 +1,14 @@
 use RelLib/Lattice/Min.{min1};
 use RelLib/Lattice/Max.{max1};
+use RelLib/Lattice/All.All.{All};
+use RelLib/Lattice/Any.Any.{Any};
 
 def main(_args: Array[String]) : Int32 & Impure = 
     Console.printLine("Running...");
     getMin();
     getMax();
+    getAll();
+    getAny();
     0
 
 def getMin(): Unit & Impure = 
@@ -29,4 +33,35 @@ def getMax(): Unit & Impure =
     };
     Console.printLine("getMax...");
     query p select (x1, x2; x3) from Calls(x1, x2; x3) 
-        |> Array.foreach(println)            
+        |> Array.foreach(println)
+
+
+def getAll(): Unit & Impure = 
+    let p = #{
+        
+        Calls("Anna", "Brian", 4).
+        Calls("Anna", "Brian", 10).
+        Calls("Brian", "Colin", 5).
+        Calls("Colin", "Delia", 15).
+
+        LT10(a, b; All(dur < 10)) :- Calls(a, b, dur).
+        
+    };
+    Console.printLine("getAll...");
+    query p select (x1, x2; x3) from LT10(x1, x2; x3) 
+        |> Array.foreach(println)
+
+def getAny(): Unit & Impure = 
+    let p = #{
+        
+        Calls("Anna", "Brian", 4).
+        Calls("Anna", "Brian", 10).
+        Calls("Brian", "Colin", 5).
+        Calls("Colin", "Delia", 15).
+
+        LT10(a, b; Any(dur < 10)) :- Calls(a, b, dur).
+        
+    };
+    Console.printLine("getAny...");
+    query p select (x1, x2; x3) from LT10(x1, x2; x3) 
+        |> Array.foreach(println)          
