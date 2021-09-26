@@ -51,8 +51,7 @@ namespace RelLib/Lattice/Dropped {
             case (Top, _) => Top
             case (_, Top) => Top
             case (Drop(x1), Drop(y1)) => Drop(JoinLattice.leastUpperBound(x1, y1))
-        }
-            
+        } 
     }
 
     instance MeetLattice[Dropped[a]] with MeetLattice[a] {
