@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-namespace RelLib/Lattice/Min {
+namespace RelLib/Lattice/Max {
 
-    use RelLib/Lattice/Lifted.{Lifted};
-    use RelLib/Lattice/Lifted.Lifted.{Lift, Bottom};
+    use RelLib/Lattice/Ordered.{Ordered};
+    use RelLib/Lattice/Ordered.Ordered.{Ordered};
 
-    pub enum Max[a] with Eq, Order, ToString, Boxable { case Max(Lifted[a]) }
-
-    pub def max1(x: a): Max[a] = Max(Lift(x))
+    pub enum Max[a] with Eq, Order, ToString, Boxable { case Max(Ordered[a]) }
 
     instance Functor[Max] {
         pub def map(f: a -> b & ef, x: Max[a]): Max[b] & ef = match x {
@@ -29,14 +27,13 @@ namespace RelLib/Lattice/Min {
         }
     }
 
-    /// Seems a bit disappointing to need Oder for Partial order, can this be improved?
     instance PartialOrder[Max[a]] with Order[a] {
         pub def lessEqual(x: Max[a], y: Max[a]): Bool = match (x, y) {
-            case (Max(x1), Max(y1)) => RelLib/Lattice/Lifted.lessEqualWith((a,b) -> a <= b, x1, y1)
+            case (Max(x1), Max(y1)) => PartialOrder.lessEqual(x1, y1)
         }
     }
 
-    instance LowerBound[Max[a]] {
+    instance LowerBound[Max[a]] with LowerBound[a] {
         pub def minValue(): Max[a] = Max(LowerBound.minValue())
     }
 
@@ -48,18 +45,16 @@ namespace RelLib/Lattice/Min {
     instance JoinLattice[Max[a]] with Order[a] {
         /// \/
         pub def leastUpperBound(x: Max[a], y: Max[a]): Max[a] = 
-            let lub = (a, b) -> Lift(Order.max(a, b));
             match (x, y) {
-                case (Max(x1), Max(y1)) => Max(RelLib/Lattice/Lifted.leastUpperBoundWith(lub, x1, y1))
+                case (Max(x1), Max(y1)) => Max(JoinLattice.leastUpperBound(x1, y1))
             }
     }
 
     instance MeetLattice[Max[a]] with Order[a] {
         /// /\
         pub def greatestLowerBound(x: Max[a], y: Max[a]): Max[a] = 
-            let glb = (a, b) -> Lift(Order.min(a, b));
             match (x, y) {
-                case (Max(x1), Max(y1)) => Max(RelLib/Lattice/Lifted.greatestLowerBoundWith(glb, x1, y1))
+                case (Max(x1), Max(y1)) => Max(MeetLattice.greatestLowerBound(x1, y1))
             }
     }
 
