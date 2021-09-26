@@ -11,6 +11,7 @@ def main(_args: Array[String]) : Int32 & Impure =
     getAll();
     getAny();
     getAddition();
+    getTaggedMax();
     0
 
 def getMin(): Unit & Impure = 
@@ -84,4 +85,18 @@ def getAddition(): Unit & Impure =
     };
     Console.printLine("getAddition...");
     query p select (x1, x2; x3) from Add(x1, x2; x3) 
+        |> Array.foreach(println)
+
+
+def getTaggedMax(): Unit & Impure = 
+    use RelLib/Lattice/TaggedMax.{taggedMax};
+    let p = #{
+        
+        Calls("Anna", "Brian"; taggedMax("four", 4)).
+        Calls("Anna", "Brian"; taggedMax("ten", 10)).
+        Calls("Brian", "Colin"; taggedMax("five", 5)).
+        
+    };
+    Console.printLine("getTaggedMax...");
+    query p select (x1, x2; x3) from Calls(x1, x2; x3) 
         |> Array.foreach(println)        
