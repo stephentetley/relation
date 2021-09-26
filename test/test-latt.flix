@@ -2,6 +2,7 @@ use RelLib/Lattice/Min.{min1};
 use RelLib/Lattice/Max.{max1};
 use RelLib/Lattice/All.All.{All};
 use RelLib/Lattice/Any.Any.{Any};
+use RelLib/Lattice/Addition.Addition.{Addition};
 
 def main(_args: Array[String]) : Int32 & Impure = 
     Console.printLine("Running...");
@@ -9,6 +10,7 @@ def main(_args: Array[String]) : Int32 & Impure =
     getMax();
     getAll();
     getAny();
+    getAddition();
     0
 
 def getMin(): Unit & Impure = 
@@ -64,4 +66,22 @@ def getAny(): Unit & Impure =
     };
     Console.printLine("getAny...");
     query p select (x1, x2; x3) from LT10(x1, x2; x3) 
-        |> Array.foreach(println)          
+        |> Array.foreach(println)
+
+
+def getAddition(): Unit & Impure = 
+    let p = #{
+        
+        Calls("Anna", "Brian", 4).
+        Calls("Anna", "Brian", 10).
+        Calls("Anna", "Brian", 2).
+        Calls("Brian", "Colin", 5).
+        Calls("Brian", "Colin", 3).
+        Calls("Colin", "Delia", 15).
+
+        Add(a, b; Addition(dur)) :- Calls(a, b, dur).
+        
+    };
+    Console.printLine("getAddition...");
+    query p select (x1, x2; x3) from Add(x1, x2; x3) 
+        |> Array.foreach(println)        
