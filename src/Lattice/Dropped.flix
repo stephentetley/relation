@@ -37,9 +37,17 @@ namespace RelLib/Lattice/Dropped {
         }
     }
 
+    pub def lessEqualWith(le: (a, a) -> Bool, x: Dropped[a], y: Dropped[a]): Bool = match (x, y) { 
+        case (_, Top) => true
+        case (Top, _) => false
+        case (Drop(x1), Drop(y1)) => le(x1, y1)
+    }
+
     instance LowerBound[Dropped[a]] with LowerBound[a] {
         pub def minValue(): Dropped[a] = Drop(LowerBound.minValue())
     }
+
+    pub def minValueWith(x: a): Dropped[a] = Drop(x)
 
     instance UpperBound[Dropped[a]] {
         pub def maxValue(): Dropped[a] = Top
@@ -54,6 +62,12 @@ namespace RelLib/Lattice/Dropped {
         } 
     }
 
+    pub def leastUpperBoundWith(lub: (a, a) -> a, x: Dropped[a], y: Dropped[a]): Dropped[a] = match (x, y) { 
+        case (Top, _) => Top
+        case (_, Top) => Top
+        case (Drop(x1), Drop(y1)) => Drop(lub(x1, y1))
+    } 
+
     instance MeetLattice[Dropped[a]] with MeetLattice[a] {
         /// /\
         pub def greatestLowerBound(x: Dropped[a], y: Dropped[a]): Dropped[a] = match (x, y) { 
@@ -63,5 +77,9 @@ namespace RelLib/Lattice/Dropped {
         }
     }
 
-
+    pub def greatestLowerBoundWith(glb: (a, a) -> a, x: Dropped[a], y: Dropped[a]): Dropped[a] = match (x, y) { 
+        case (Top, y1) => y1
+        case (x1, Top) => x1
+        case (Drop(x1), Drop(y1)) => Drop(glb(x1, y1))
+    }
 }
