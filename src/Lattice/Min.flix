@@ -23,6 +23,10 @@ namespace RelLib/Lattice/Min {
 
     pub def min1(x: a): Min[a] = Min(Ordered(x))
 
+    pub def getValue(x: Min[a]): a = match x {
+        case Min(Ordered(x1)) => x1
+    }
+
     instance Functor[Min] {
         pub def map(f: a -> b & ef, x: Min[a]): Min[b] & ef = match x {
             case Min(a) => Min(Functor.map(f, a))
