@@ -41,6 +41,20 @@ namespace RelLib/Organization {
         };        
         Array.foldRight(step, Map.empty(), arr)
 
+    /// Need functions to "unmap"...
+
+    pub def outofMapList(f: (k, List[b]) -> c & ef, t: Map[k, List[b]]): List[c] & ef = 
+        Map.foldRightWithKey((k, xs, ac) -> f(k, xs) :: ac, Nil, t)
+
+    pub def outofMapArray(f: (k, Array[b]) ~> c, t: Map[k, Array[b]]): List[c] & Impure = 
+        Map.foldRightWithKey((k, xs, ac) -> f(k, xs) :: ac, Nil, t)
+
+    pub def viaMapList(intoMap: (a -> k & ef1, a -> b & ef1), outofMap: (k, List[b]) -> c & ef2, arr: Array[a]): List[c] & Impure with Order[k] = 
+        let f = fst(intoMap);
+        let g = snd(intoMap);
+        collectToMapList(f, g, arr) |> outofMapList(outofMap)
+
+
     /// This is "just a `map` traversal" but it seems to merit a new combinator because we
     /// want to highlight that we are combining with the (finite) Map...
     pub def mapWithLookup(f: a -> k, g: (a, Option[v]) -> b & ef, 
