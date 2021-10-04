@@ -19,7 +19,7 @@ namespace RelLib/Lattice/Min {
     use RelLib/Lattice/Ordered.{Ordered};
     use RelLib/Lattice/Ordered.Ordered.{Ordered};
 
-    pub enum Min[a] with Eq, Order, ToString, Boxable { case Min(Ordered[a]) }
+    pub opaque type Min[a] with Eq, Order, ToString, Boxable = Ordered[a]
 
     pub def min1(x: a): Min[a] = Min(Ordered(x))
 

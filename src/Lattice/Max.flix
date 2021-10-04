@@ -19,7 +19,7 @@ namespace RelLib/Lattice/Max {
     use RelLib/Lattice/Ordered.{Ordered};
     use RelLib/Lattice/Ordered.Ordered.{Ordered};
 
-    pub enum Max[a] with Eq, Order, ToString, Boxable { case Max(Ordered[a]) }
+    pub opaque type Max[a] with Eq, Order, ToString, Boxable = Ordered[a]
 
     pub def max1(x: a): Max[a] = Max(Ordered(x))
 

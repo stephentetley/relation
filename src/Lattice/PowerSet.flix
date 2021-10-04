@@ -18,10 +18,7 @@
 
 namespace RelLib/Lattice/PowerSet {
 
-    pub enum PowerSet[a] with ToString, Boxable { 
-        /// Bottom is obviously `Set.empty()`, do we need Top?
-        case PowerSet(Set[a])
-    }
+    pub opaque type PowerSet[a] with ToString, Boxable = Set[a]
 
     instance Eq[PowerSet[a]] with Order[a] {
         pub def eq(x: PowerSet[a], y: PowerSet[a]): Bool = match (x, y) {
