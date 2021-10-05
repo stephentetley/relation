@@ -17,8 +17,8 @@
 namespace RelLib {
 
     type alias RegexExtractor[r] = 
-        { pattern: Text/Regex.Pattern
-        , evaluator: Text/Regex.MatchEvaluator[r]
+        { pattern :: Text/Regex.Pattern
+        , evaluator :: Text/Regex.MatchEvaluator[r]
         }
 
 }
@@ -49,15 +49,15 @@ namespace RelLib/RegexExtractor {
 
     /// uses `contains` - somewhere in input...
     pub def extract(extract: RegexExtractor[#{|r}], input: String): #{|r} & Impure =  
-        match Text/Regex.evalContains(input, extract.pattern, extract.evaluator) {
+        match Text/Regex.evalContains(extract.pattern, extract.evaluator, input) {
             case Err(_) => #{}
             case Ok(r1) => r1
         }
 
     pub def extract2(f: (a, b) -> #{|r}, extract1: RegexExtractor[a], extract2: RegexExtractor[b], input: String): #{|r} & Impure =  
-        match Text/Regex.evalContains(input, extract1.pattern, extract1.evaluator) {
+        match Text/Regex.evalContains(extract1.pattern, extract1.evaluator, input) {
             case Err(_) => #{}
-            case Ok(a) => match Text/Regex.evalContains(input, extract2.pattern, extract2.evaluator) {
+            case Ok(a) => match Text/Regex.evalContains(extract2.pattern, extract2.evaluator, input) {
                 case Err(_) => #{}
                 case Ok(b) => f(a, b)
             }
