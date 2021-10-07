@@ -30,7 +30,7 @@ namespace RelLib/Lattice/Prefix {
         case Pre(s) => Some(s)
     }
 
-
+    /// This might be the problem...
     instance PartialOrder[Prefix] {
         pub def lessEqual(x: Prefix, y: Prefix): Bool = match (x, y) { 
             case (Bottom, _) => true

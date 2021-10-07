@@ -21,6 +21,13 @@ namespace RelLib/Organization {
 
     /// Fix to Array or generalize to Foldable?
 
+    pub def intoMap(f: a -> k & ef, g: a -> b & ef, arr: Array[a]): Map[k, b] & Impure with Order[k] = 
+        let step = (x1, ac) -> {
+            let k = f(x1) as & Impure;
+            Map.insert(k, g(x1) as & Impure, ac)
+        };        
+        Array.foldRight(step, Map.empty(), arr)
+
     pub def intoMapList(f: a -> k & ef, g: a -> b & ef, arr: Array[a]): Map[k, List[b]] & Impure with Order[k] = 
         intoMapWith(f, Nil, (x1, xs) -> {let v1 = g(x1); v1 :: xs}, arr)
 
