@@ -35,7 +35,7 @@ namespace RelLib/Lattice/Prefix {
         pub def lessEqual(x: Prefix, y: Prefix): Bool = match (x, y) { 
             case (Bottom, _) => true
             case (_, Bottom) => false
-            case (Pre(x1), Pre(y1)) => x1 `String.startsWith` y1
+            case (Pre(x1), Pre(y1)) => String.startsWith({prefix = x1}, y1) 
         }
     }
 
