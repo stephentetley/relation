@@ -42,20 +42,11 @@ namespace RelLib/Relation {
         case _ => #{}
     }
 
-    pub def optional(x: Option[a], f: a -> #{| r}): #{| r} = match x {
-        case Some(x1) => f(x1)
+    pub def optional(x: Option[#{| r}]): #{| r} = match x {
+        case Some(r1) => r1
         case _ => #{}
     }
 
-    pub def optional2(x: Option[a], y: Option[b], f: (a, b) -> #{| r}): #{| r} = match (x, y) {
-        case (Some(x1), Some(y1)) => f(x1, y1)
-        case _ => #{}
-    }
-
-    pub def optional3(x: Option[a], y: Option[b], z: Option[c], f: (a, b, c) -> #{| r}): #{| r} = match (x, y, z) {
-        case (Some(x1), Some(y1), Some(z1)) => f(x1, y1, z1)
-        case _ => #{}
-    }
 
     pub def combineAll(relns: t[#{| r}]): #{| r} with Foldable[t] =
         Foldable.foldLeft((ac, x) -> ac <+> x, #{}, relns)
