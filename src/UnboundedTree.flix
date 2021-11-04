@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace RelLib/UnboundTree {
+namespace RelLib/UnboundedTree {
 
     use Data.RoseTree;
     use Data.RoseForest;

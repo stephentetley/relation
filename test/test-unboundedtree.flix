@@ -1,7 +1,7 @@
 use Data.RoseTree;
 use Data.RoseTree.{RoseTree};
 
-use RelLib/UnboundTree.{PreorderRow};
+use RelLib/UnboundedTree.{PreorderRow};
 
 
 def main(_args: Array[String]): Int32 & Impure = 
@@ -11,7 +11,7 @@ def main(_args: Array[String]): Int32 & Impure =
 
 def test01(): Result[Unit, String] & Impure = 
     use Result.flatMap;
-    let _ = RelLib/UnboundTree.printAsTree("", rows());
+    let _ = RelLib/UnboundedTree.printAsTree("", rows());
     Ok()
 
 def rows(): Array[PreorderRow[String, String]] & Impure = 
