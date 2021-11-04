@@ -61,12 +61,18 @@ namespace RelLib/Tree2 {
             case (x1, x2, x3, x4, x5, x6, x7, x8, x9) => makePath(ToString.toString(x9) :: ToString.toString(x8) :: ToString.toString(x7) :: ToString.toString(x6) :: ToString.toString(x5) :: ToString.toString(x4) :: ToString.toString(x3) :: ToString.toString(x2) :: ToString.toString(x1) :: Nil)
         }
 
+    pub def path10(t: (a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)): Path with ToString[a1], ToString[a2], ToString[a3], ToString[a4], ToString[a5], ToString[a6], ToString[a7], ToString[a8], ToString[a9], ToString[a10] = 
+        match t {  
+            case (x1, x2, x3, x4, x5, x6, x7, x8, x9, x10) => makePath(ToString.toString(x10) :: ToString.toString(x9) :: ToString.toString(x8) :: ToString.toString(x7) :: ToString.toString(x6) :: ToString.toString(x5) :: ToString.toString(x4) :: ToString.toString(x3) :: ToString.toString(x2) :: ToString.toString(x1) :: Nil)
+        }
+
 
     def makePath(xs: Path): Path = List.filter(s1 -> not String.isEmpty(s1), xs)
 
 
-    pub def buildTree(input: List[Path]): Result[RoseTree[String], String] = 
-        match treesList(Nil, input, (xs, _) -> xs) {
+    pub def buildTree(input: Array[Path]): Result[RoseTree[String], String] & Impure = 
+        let paths = Array.toList(input);
+        match treesList(Nil, paths, (xs, _) -> xs) {
             case x1 :: Nil => Ok(x1)
             case _ :: _ => Err("buildTree2 - more than one tree")
             case Nil => Err("buildTree2 - no tree")
@@ -125,8 +131,12 @@ namespace RelLib/Tree2 {
     pub def printAsTree9(arr: Array[(a1, a2, a3, a4, a5, a6, a7, a8, a9)]): Unit & Impure with ToString[a1], ToString[a2], ToString[a3], ToString[a4], ToString[a5], ToString[a6], ToString[a7], ToString[a8], ToString[a9] = 
         Array.map(path9, arr) |> printAsTreeHelper
 
+    pub def printAsTree10(arr: Array[(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)]): Unit & Impure with ToString[a1], ToString[a2], ToString[a3], ToString[a4], ToString[a5], ToString[a6], ToString[a7], ToString[a8], ToString[a9], ToString[a10] = 
+        Array.map(path10, arr) |> printAsTreeHelper
+
+
     def printAsTreeHelper(paths: Array[Path]): Unit & Impure = 
-        match (paths |> Array.toList |> buildTree) { 
+        match (paths |> buildTree) { 
             case Err(msg) => println("Error: ${msg}")
             case Ok(tree) => Data/RoseTree.drawTree(tree) |> println
         }
