@@ -23,20 +23,36 @@ namespace RelLib/UnboundedTree {
 
     pub type alias PreorderRow[k, v] = (k, v, k)
 
+
+    /// `unboundForest` takes a dictionary:
+    ///
+    pub type alias TreeRowExtractor[row, k, v] = 
+        { getKey :: row -> k 
+        , getParent :: row -> k 
+        , getValue :: row -> v
+        }
+    
+    def extractKeyValueParent(extractor: TreeRowExtractor[row, k, v], r: row): (k, v, k) =
+        ((extractor.getKey)(r), (extractor.getValue)(r), (extractor.getParent)(r))
+
+
     /// `rootKey` is the parent key of the topmost element(s), it should not be present as an item key.
-    pub def unboundForest(rootKey: k, rows: Array[PreorderRow[k, v]]): RoseForest[v] & Impure with Eq[k] =  
-        treesList(rootKey, Array.toList(rows), (xs, _) -> xs) 
+    pub def unboundForest(rootKey: k, extractor: TreeRowExtractor[row, k, v], rows: Array[row]): RoseForest[v] & Impure with Eq[k] =  
+        treesList(rootKey, extractor, Array.toList(rows), (xs, _) -> xs) 
 
 
     /// This is preorder builder with unlimited depth - input *must* be correctly ordered.
-    def treesList(parentId: k, xs: List[PreorderRow[k, v]], k: (List[RoseTree[v]], List[PreorderRow[k, v]]) -> List[RoseTree[v]]): List[RoseTree[v]] with Eq[k] =
+    def treesList(parentId: k, 
+                    extractor: TreeRowExtractor[row, k, v], 
+                    xs: List[row], 
+                    k: (List[RoseTree[v]], List[row]) -> List[RoseTree[v]]): List[RoseTree[v]] with Eq[k] =
         match xs { 
             case r1 :: rest => {
-                let (key, label, parentKey) = r1;
+                let (key, label, parentKey) = extractKeyValueParent(extractor, r1);
                 if (parentId == parentKey)
-                    treesList(key, rest, (kids, rest1) -> {
+                    treesList(key, extractor, rest, (kids, rest1) -> {
                         let node = RoseTree(label, kids);
-                        treesList(parentId, rest1, (siblings, rest2) -> k(node :: siblings, rest2))
+                        treesList(parentId, extractor, rest1, (siblings, rest2) -> k(node :: siblings, rest2))
                     })
                 else
                     k(Nil, xs)
@@ -45,8 +61,8 @@ namespace RelLib/UnboundedTree {
         }
 
     /// Note - we build a forest, so synthesize a root node unless we have a singleton.
-    pub def printAsTree(rootKey: k, arr: Array[PreorderRow[k, v]]): Unit & Impure with Eq[k], ToString[v] = 
-        match unboundForest(rootKey, arr) { 
+    pub def printAsTree(rootKey: k, extractor: TreeRowExtractor[row, k, v], arr: Array[row]): Unit & Impure with Eq[k], ToString[v] = 
+        match unboundForest(rootKey, extractor, arr) { 
             case t1 :: Nil => Data/RoseTree.map(ToString.toString, t1) |> Data/RoseTree.drawTree |> println
             case trees => 
                 RoseTree("Root", List.map(Data/RoseTree.map(ToString.toString), trees))
