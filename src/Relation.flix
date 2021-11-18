@@ -17,12 +17,12 @@
 
 namespace RelLib/Relation {
 
-    pub def when(test: Bool, reln: #{| r}): #{| r} = match test {
+    pub def whenTrue(test: Bool, reln: #{| r}): #{| r} = match test {
         case true => reln
         case _ => #{}
     }
 
-    pub def whenNot(test: Bool, reln: #{| r}): #{| r} = match test {
+    pub def whenFalse(test: Bool, reln: #{| r}): #{| r} = match test {
         case false => reln
         case _ => #{}
     }
