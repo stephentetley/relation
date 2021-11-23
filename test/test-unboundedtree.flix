@@ -11,7 +11,12 @@ def main(_args: Array[String]): Int32 & Impure =
 
 def test01(): Result[Unit, String] & Impure = 
     use Result.flatMap;
-    let _ = RelLib/UnboundedTree.printAsTree("", rows());
+    let extractor = 
+        { getKey = RelLib/Tuple.decons3((x, _, _) -> x)
+        , getParent = RelLib/Tuple.decons3((_, _, z) -> z)
+        , getValue = RelLib/Tuple.decons3((_, y, _) -> y)
+        };
+    let _ = RelLib/UnboundedTree.printAsTree("", extractor, rows());
     Ok()
 
 def rows(): Array[PreorderRow[String, String]] & Impure = 

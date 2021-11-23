@@ -53,7 +53,7 @@ namespace RelLib/Organization {
     pub def outofMapList(f: (k, List[b]) -> c & ef, t: Map[k, List[b]]): List[c] & ef = 
         Map.foldRightWithKey((k, xs, ac) -> f(k, xs) :: ac, Nil, t)
 
-    pub def outofMapArray(f: (k, Array[b]) ~> c, t: Map[k, Array[b]]): List[c] & Impure = 
+    pub def outofMapArray(f: (k, Array[b]) -> c & Impure, t: Map[k, Array[b]]): List[c] & Impure = 
         Map.foldRightWithKey((k, xs, ac) -> f(k, xs) :: ac, Nil, t)
 
     pub def outofMapSet(f: (k, Set[b]) -> c & ef, t: Map[k, Set[b]]): List[c] & ef = 
