@@ -18,7 +18,7 @@ namespace RelLib/UnboundedTree {
 
     use Data.RoseTree;
     use Data.RoseForest;
-    use Data.RoseTree.{RoseTree};
+    use Data.RoseTree.{Node};
 
 
     pub type alias PreorderRow[k, v] = (k, v, k)
@@ -51,7 +51,7 @@ namespace RelLib/UnboundedTree {
                 let (key, label, parentKey) = extractKeyValueParent(extractor, r1);
                 if (parentId == parentKey)
                     treesList(key, extractor, rest, (kids, rest1) -> {
-                        let node = RoseTree(label, kids);
+                        let node = Node(label, kids);
                         treesList(parentId, extractor, rest1, (siblings, rest2) -> k(node :: siblings, rest2))
                     })
                 else
@@ -65,7 +65,7 @@ namespace RelLib/UnboundedTree {
         match unboundForest(rootKey, extractor, arr) { 
             case t1 :: Nil => Data/RoseTree.map(ToString.toString, t1) |> Data/RoseTree.drawTree |> println
             case trees => 
-                RoseTree("Root", List.map(Data/RoseTree.map(ToString.toString), trees))
+                Node("Root", List.map(Data/RoseTree.map(ToString.toString), trees))
                     |> Data/RoseTree.drawTree
                     |> println
         }

@@ -1,5 +1,5 @@
 use Data.RoseTree;
-use Data.RoseTree.{RoseTree};
+use Data.RoseTree.{Node};
 
 use RelLib/Tree.Level3;
 use RelLib/Tree.Level3.{RootOf3, Level1Of3, Level2Of3, Level3Of3};
@@ -15,7 +15,7 @@ def main(_args: Array[String]): Int32 & Impure =
 
 
 pub def t1(): RoseTree[Level3[String, Char, Int32]] = 
-    RoseTree(RootOf3, RoseTree(Level1Of3("hello"), RoseTree(Level2Of3('X'), RoseTree(Level3Of3(1), Nil) :: Nil) :: Nil) ::Nil)
+    Node(RootOf3, Node(Level1Of3("hello"), Node(Level2Of3('X'), Node(Level3Of3(1), Nil) :: Nil) :: Nil) ::Nil)
 
 
 rel Organization(set: String, pump: String)

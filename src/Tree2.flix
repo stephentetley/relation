@@ -17,7 +17,7 @@
 namespace RelLib/Tree2 {
 
     use Data.RoseTree;
-    use Data.RoseTree.{RoseTree};
+    use Data.RoseTree.{Node};
 
     type alias Path = List[String]
 
@@ -88,7 +88,7 @@ namespace RelLib/Tree2 {
                 if (isChildNode(parent, path1))
                     treesList(path1, rest, (kids, rest1) -> {
                         let label = top(path1);
-                        let node = RoseTree(label, kids);
+                        let node = Node(label, kids);
                         treesList(parent, rest1, (siblings, rest2) -> k(node :: siblings, rest2))
                     })
                 else

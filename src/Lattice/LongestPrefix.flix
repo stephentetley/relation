@@ -16,9 +16,9 @@
 
 namespace RelLib/Lattice/LongestPrefix {
 
-    /// TODO adapt TaggedMax
-
-    
+    /// TODO this is really `LongestString`
+    /// There's nothing mandating the String is a prefix
+        
     pub enum LongestPrefix with Eq, Order, ToString, Boxable {
         case Top
         case LongestPrefix(String) 
