@@ -1,22 +1,22 @@
 
-use RelLib/Lattice/LongestPrefix.{LongestPrefix};
+use RelLib/Lattice/LongestString.{LongestString};
 
 def main(_args: Array[String]) : Int32 & Impure = 
     Console.printLine("Running...");
     getPrefix();
     0
 
-def prefix(dir1: String, dir2: String): LongestPrefix = 
-    use RelLib/Lattice/LongestPrefix.{longestPrefix};
+def prefix(dir1: String, dir2: String): LongestString = 
+    use RelLib/Lattice/LongestString.{longestString};
     if (String.length(dir1) <= String.length(dir2)) 
         LowerBound.minValue() 
     else {
         let prefix = String.commonPrefix(dir1, dir2);
-        longestPrefix(prefix)
+        longestString(prefix)
     } 
         
 
-lat Prefix(dir: String, prefix: LongestPrefix)
+lat Prefix(dir: String, prefix: LongestString)
 
 def getPrefix(): Unit & Impure = 
 
