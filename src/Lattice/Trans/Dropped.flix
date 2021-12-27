@@ -15,7 +15,7 @@
  */
 
 
-namespace RelLib/Lattice/Dropped {
+namespace RelLib/Lattice/Trans/Dropped {
 
     pub enum Dropped[a] with Eq, Order, ToString, Boxable { 
         case Drop(a)

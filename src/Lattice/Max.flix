@@ -16,8 +16,8 @@
 
 namespace RelLib/Lattice/Max {
 
-    use RelLib/Lattice/Ordered.{Ordered};
-    use RelLib/Lattice/Ordered.Ordered.{Ordered};
+    use RelLib/Lattice/Trans/Ordered.{Ordered};
+    use RelLib/Lattice/Trans/Ordered.Ordered.{Ordered};
 
     pub opaque type Max[a] with Eq, Order, ToString, Boxable = Ordered[a]
 

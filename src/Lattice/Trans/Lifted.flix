@@ -15,7 +15,7 @@
  */
 
 
-namespace RelLib/Lattice/Lifted {
+namespace RelLib/Lattice/Trans/Lifted {
 
     pub enum Lifted[a] with Eq, Order, ToString, Boxable { 
         case Bottom 

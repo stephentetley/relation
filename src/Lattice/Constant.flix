@@ -16,9 +16,10 @@
 
 namespace RelLib/Lattice/Constant {
 
-    use RelLib/Lattice/Wide.{Wide};
-    use RelLib/Lattice/Wide.Wide.{Top, Middle, Bottom};
+    use RelLib/Lattice/Trans/Wide.{Wide};
+    use RelLib/Lattice/Trans/Wide.Wide.{Top, Middle, Bottom};
 
+    /// TODO - not sure we should be using Wide - must check...
 
     pub enum Constant[a] with Eq, Order, ToString, Boxable { case Constant(Wide[a]) }
 

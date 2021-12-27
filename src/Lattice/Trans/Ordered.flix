@@ -16,7 +16,7 @@
 
 /// Turn an ordered type into a lattice...
 
-namespace RelLib/Lattice/Ordered {
+namespace RelLib/Lattice/Trans/Ordered {
 
     pub enum Ordered[a] with Eq, Order, ToString, Boxable { case Ordered(a) }
 

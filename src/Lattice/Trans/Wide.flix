@@ -16,7 +16,7 @@
 
 /// Graft Top and Bottom onto any type that supports Eq...
 
-namespace RelLib/Lattice/Wide {
+namespace RelLib/Lattice/Trans/Wide {
 
     pub enum Wide[a] with Eq, Order, ToString, Boxable { 
         case Bottom
