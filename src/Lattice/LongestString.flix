@@ -16,7 +16,7 @@
 
 namespace RelLib/Lattice/LongestString {
 
-        
+
     pub enum LongestString with Eq, Order, ToString, Boxable {
         case Top
         case LongestString(String) 
