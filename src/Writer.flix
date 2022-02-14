@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
+/// NOTE this causes problems for the compiler and is not yet usable for realworld code.
+
 namespace RelLib {
     ///
-    /// RelationWriter is the Writer monad implemented in CPS. 
+    /// A Writer monad implemented in CPS that uses `#{}` (empty relation) and `<+>` (relational append)
+    /// rather than the Monoid class.
     ///
     /// We use an Impure continuation so we can internally cast the `ef` of operations and not lose
     /// impurity information.
