@@ -19,7 +19,7 @@ namespace RelLib/Tree2 {
     use Data.RoseTree;
     use Data.RoseTree.{Node};
 
-    type alias Path = List[String]
+    pub type alias Path = List[String]
 
     pub def path2(t: (a1, a2)): Path with ToString[a1], ToString[a2] = 
         match t {  

@@ -1,43 +1,46 @@
 
-use RelLib/Lattice/LongestString.{LongestString};
+namespace TestLongestString {
 
-def main(_args: Array[String]) : Int32 & Impure = 
-    Console.printLine("Running...");
-    getPrefix();
-    0
+    use RelLib/Lattice/LongestString.{LongestString};
 
-def prefix(dir1: String, dir2: String): LongestString = 
-    use RelLib/Lattice/LongestString.{longestString};
-    if (String.length(dir1) <= String.length(dir2)) 
-        LowerBound.minValue() 
-    else {
-        let prefix = String.commonPrefix(dir1, dir2);
-        longestString(prefix)
-    } 
-        
+    @test
+    def test01(): Int32 & Impure = 
+        Console.printLine("Running...");
+        getPrefix();
+        0
 
-lat Prefix(dir: String, prefix: LongestString)
+    def prefix(dir1: String, dir2: String): LongestString = 
+        use RelLib/Lattice/LongestString.{longestString};
+        if (String.length(dir1) <= String.length(dir2)) 
+            LowerBound.minValue() 
+        else {
+            let prefix = String.commonPrefix(dir1, dir2);
+            longestString(prefix)
+        } 
+            
 
-def getPrefix(): Unit & Impure = 
+    lat Prefix(dir: String, prefix: LongestString)
 
-    let p = #{
-        
-        Path("/").
-        Path("/home").
-        Path("/home/stephen").
-        Path("/home/stephen/local.cache").
-        Path("/usr").
-        Path("/usr/local").
-        
-        Prefix(dir1; prefix(dir1, dir2)) :- 
-            Path(dir1),
-            Path(dir2).
+    def getPrefix(): Unit & Impure = 
 
-        /// ParentOf(path; ancestor) :- Prefix(path; ancestor).
+        let p = #{
+            
+            Path("/").
+            Path("/home").
+            Path("/home/stephen").
+            Path("/home/stephen/local.cache").
+            Path("/usr").
+            Path("/usr/local").
+            
+            Prefix(dir1; prefix(dir1, dir2)) :- 
+                Path(dir1),
+                Path(dir2).
 
-    };
-    Console.printLine("getPrefix...");
-    query p select (x1; x2) from Prefix(x1; x2) |> Array.foreach(println);
-    /// Console.printLine("getParentOf...");
-    /// query p select (x1; x2) from ParentOf(x1; x2) |> Array.foreach(println);
-    ()
+            /// ParentOf(path; ancestor) :- Prefix(path; ancestor).
+
+        };
+        Console.printLine("getPrefix...");
+        query p select (x1, x2) from Prefix(x1; x2) |> Array.foreach(println);
+        ()
+
+}
