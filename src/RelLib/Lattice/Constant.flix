@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Stephen Tetley
+ * Copyright 2022 Stephen Tetley
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,46 +16,58 @@
 
 namespace RelLib/Lattice/Constant {
 
-    use RelLib/Lattice/Trans/Wide.{Wide};
-    use RelLib/Lattice/Trans/Wide.Wide.{Top, Middle, Bottom};
-
     /// TODO - not sure we should be using Wide - must check...
 
-    pub enum Constant[a] with Eq, Order, ToString, Boxable { case Constant(Wide[a]) }
+    pub enum Constant[a] with Eq, Order, ToString, Boxable { 
+        case Bottom
+        case Constant(a)
+        case Top
+    }
 
-    pub def constant(x: a): Constant[a] = Constant(Middle(x))
+    pub def constant(x: a): Constant[a] = Constant(x)
     
     instance Functor[Constant] {
         pub def map(f: a -> b & ef, x: Constant[a]): Constant[b] & ef = match x {
-            case Constant(a) => Constant(Functor.map(f, a))
+            case Bottom      => Bottom
+            case Constant(a) => Constant(f(a))
+            case Top         => Top
         }
     }
 
     instance PartialOrder[Constant[a]] with Eq[a] {
-        pub def lessEqual(x: Constant[a], y: Constant[a]): Bool = match (x, y) { 
-            case (Constant(x1), Constant(y1)) => PartialOrder.lessEqual(x1, y1)
+        pub def lessEqual(x: Constant[a], y: Constant[a]): Bool = match (x, y) {
+            case (Bottom, _)                  => true
+            case (Constant(x1), Constant(x2)) => x1 == x2
+            case (_, Top)                     => true
+            case _                            => false
         }
     }
 
     instance LowerBound[Constant[a]] {
-        pub def minValue(): Constant[a] = Constant(LowerBound.minValue())
+        pub def minValue(): Constant[a] = Bottom
     }
 
     instance UpperBound[Constant[a]] {
-        pub def maxValue(): Constant[a] = Constant(UpperBound.maxValue())
+        pub def maxValue(): Constant[a] = Top
     }
     
     instance JoinLattice[Constant[a]] with Eq[a] {
         /// \/
-        pub def leastUpperBound(x: Constant[a], y: Constant[a]): Constant[a] = match (x, y) { 
-            case (Constant(x1), Constant(y1)) => Constant(JoinLattice.leastUpperBound(x1, y1))
+        pub def leastUpperBound(x: Constant[a], y: Constant[a]): Constant[a] = match (x, y) {
+            case (Bottom, _)                  => y
+            case (_, Bottom)                  => x
+            case (Constant(x1), Constant(x2)) => if (x1 == x2) Constant(x1) else Top
+            case _                            => Top
         }
     }
 
     instance MeetLattice[Constant[a]] with Eq[a] {
         /// /\
-        pub def greatestLowerBound(x: Constant[a], y: Constant[a]): Constant[a] = match (x, y) { 
-            case (Constant(x1), Constant(y1)) => Constant(MeetLattice.greatestLowerBound(x1, y1))
+        pub def greatestLowerBound(x: Constant[a], y: Constant[a]): Constant[a] = match (x, y) {
+            case (Top, _)                     => y
+            case (_, Top)                     => x
+            case (Constant(x1), Constant(x2)) => if (x1 == x2) Constant(x1) else Bottom
+            case _                            => Bottom
         }
     }
 
