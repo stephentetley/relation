@@ -25,7 +25,14 @@ namespace RelLib/Lattice/Constant {
     }
 
     pub def constant(x: a): Constant[a] = Constant(x)
-    
+
+    pub def getValue(x: Constant[a]): Option[a] = match x {
+        case Top         => None
+        case Constant(a) => Some(a)
+        case Bottom      => None
+    }
+
+
     instance Functor[Constant] {
         pub def map(f: a -> b & ef, x: Constant[a]): Constant[b] & ef = match x {
             case Bottom      => Bottom
