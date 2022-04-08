@@ -32,6 +32,11 @@ namespace RelLib/Lattice/Constant {
         case Bottom      => None
     }
 
+    pub def ofOption(x: Option[a]): Constant[a] = match x { 
+        case Some(x1) => Constant(x1)
+        case None     => Bottom
+    }
+
 
     instance Functor[Constant] {
         pub def map(f: a -> b & ef, x: Constant[a]): Constant[b] & ef = match x {
@@ -63,7 +68,7 @@ namespace RelLib/Lattice/Constant {
         pub def leastUpperBound(x: Constant[a], y: Constant[a]): Constant[a] = match (x, y) {
             case (Bottom, _)                  => y
             case (_, Bottom)                  => x
-            case (Constant(x1), Constant(x2)) => if (x1 == x2) Constant(x1) else Top
+            case (Constant(x1), Constant(y1)) => if (x1 == y1) Constant(x1) else Top
             case _                            => Top
         }
     }
@@ -73,7 +78,7 @@ namespace RelLib/Lattice/Constant {
         pub def greatestLowerBound(x: Constant[a], y: Constant[a]): Constant[a] = match (x, y) {
             case (Top, _)                     => y
             case (_, Top)                     => x
-            case (Constant(x1), Constant(x2)) => if (x1 == x2) Constant(x1) else Bottom
+            case (Constant(x1), Constant(y1)) => if (x1 == y1) Constant(x1) else Bottom
             case _                            => Bottom
         }
     }
