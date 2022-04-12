@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/// TODO can Tagged be a lattice transformer?
+
 namespace RelLib/Lattice/TaggedMax {
 
     use RelLib/Lattice/Ordered.{Ordered};

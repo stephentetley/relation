@@ -16,8 +16,8 @@
 
 namespace RelLib/Tree2 {
 
-    use Data.RoseTree;
-    use Data.RoseTree.{Node};
+    use FlixSandbox.RoseTree;
+    use FlixSandbox.RoseTree.{Node};
 
     pub type alias Path = List[String]
 
@@ -138,7 +138,7 @@ namespace RelLib/Tree2 {
     def printAsTreeHelper(paths: Array[Path]): Unit & Impure = 
         match (paths |> buildTree) { 
             case Err(msg) => println("Error: ${msg}")
-            case Ok(tree) => Data/RoseTree.drawTree(tree) |> println
+            case Ok(tree) => FlixSandbox/RoseTree.drawTree(tree) |> println
         }
 
 

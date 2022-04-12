@@ -1,8 +1,8 @@
 
 namespace TestTree {
 
-    use Data.RoseTree;
-    use Data.RoseTree.{Node};
+    use FlixSandbox.RoseTree;
+    use FlixSandbox.RoseTree.{Node};
 
     use RelLib/Tree.Level3;
     use RelLib/Tree.Level3.{RootOf3, Level1Of3, Level2Of3, Level3Of3};
@@ -11,7 +11,7 @@ namespace TestTree {
     def testAll(): Int32 & Impure = 
         Console.printLine("Running...");
         test01();
-        Data/RoseTree.map(ToString.toString, t1()) |> Data/RoseTree.drawTree |> println;
+        FlixSandbox/RoseTree.map(ToString.toString, t1()) |> FlixSandbox/RoseTree.drawTree |> println;
         [("A", "B1", "X"), ("A", "B2", "Y")] |> RelLib/Tree.printAsTree3;
         [("Top", "B1", "X", 100), ("Top", "B1", "Y", 101)] |> RelLib/Tree.printAsTree4;
         [("Top", "B1", "X", 100, "hello"), ("Top", "B1", "Y", 101, "world")] |> RelLib/Tree.printAsTree5;

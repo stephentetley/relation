@@ -16,8 +16,8 @@
 
 namespace RelLib/Tree {
 
-    use Data.RoseTree;
-    use Data.RoseTree.{Node};
+    use FlixSandbox.RoseTree;
+    use FlixSandbox.RoseTree.{Node};
 
 
     /// Tree2
@@ -39,8 +39,8 @@ namespace RelLib/Tree {
 
     
     def genKids2(node1: (a, List[b]) -> RoseTree[c] & ef, groups: Map[a, List[b]]): List[RoseTree[c]] & Impure with Order[a]  = 
-        let dskids = Map.foldLeftWithKey((ds, k, v) -> Data/DList.snoc(ds, node1(k, v) as & Impure), Data/DList.empty(), groups);
-        Data/DList.toList(dskids)
+        let dskids = Map.foldLeftWithKey((ds, k, v) -> Chain.snoc(ds, node1(k, v) as & Impure), Chain.empty(), groups);
+        Chain.toList(dskids)
 
     
     /// We want this exposed by the API to support printing to HTML, maybe JSON etc.
@@ -54,8 +54,8 @@ namespace RelLib/Tree {
             case Level1Of2(a) => ToString.toString(a)
             case Level2Of2(b) => ToString.toString(b)
         };
-        Data/RoseTree.map(nodeToString, tree)
-            |> Data/RoseTree.drawTree
+        FlixSandbox/RoseTree.map(nodeToString, tree)
+            |> FlixSandbox/RoseTree.drawTree
 
     pub def printAsTree2(arr: Array[(a, b)]): Unit & Impure with Order[a], ToString[a], ToString[b] = 
         tree2(arr) 
@@ -98,8 +98,8 @@ namespace RelLib/Tree {
             case Level2Of3(b) => ToString.toString(b)
             case Level3Of3(c) => ToString.toString(c)
         };
-        Data/RoseTree.map(nodeToString, tree)
-            |> Data/RoseTree.drawTree
+        FlixSandbox/RoseTree.map(nodeToString, tree)
+            |> FlixSandbox/RoseTree.drawTree
 
     pub def printAsTree3(arr: Array[(a, b, c)]): Unit & Impure with Order[a], Order[b], ToString[a], ToString[b], ToString[c] = 
         tree3(arr) 
@@ -149,8 +149,8 @@ namespace RelLib/Tree {
             case Level3Of4(c) => ToString.toString(c)
             case Level4Of4(d) => ToString.toString(d)
         };
-        Data/RoseTree.map(nodeToString, tree)
-            |> Data/RoseTree.drawTree
+        FlixSandbox/RoseTree.map(nodeToString, tree)
+            |> FlixSandbox/RoseTree.drawTree
 
     pub def printAsTree4(arr: Array[(a, b, c, d)]): Unit & Impure with Order[a], Order[b], Order[c], ToString[a], ToString[b], ToString[c], ToString[d] = 
         tree4(arr) 
@@ -209,8 +209,8 @@ namespace RelLib/Tree {
             case Level4Of5(d) => ToString.toString(d)
             case Level5Of5(e) => ToString.toString(e)
         };
-        Data/RoseTree.map(nodeToString, tree)
-            |> Data/RoseTree.drawTree
+        FlixSandbox/RoseTree.map(nodeToString, tree)
+            |> FlixSandbox/RoseTree.drawTree
 
 
     pub def printAsTree5(arr: Array[(a, b, c, d, e)]): Unit & Impure with Order[a], Order[b], Order[c], Order[d], ToString[a], ToString[b], ToString[c], ToString[d], ToString[e] = 

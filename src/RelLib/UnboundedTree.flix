@@ -16,9 +16,9 @@
 
 namespace RelLib/UnboundedTree {
 
-    use Data.RoseTree;
-    use Data.RoseForest;
-    use Data.RoseTree.{Node};
+    use FlixSandbox.RoseTree;
+    use FlixSandbox.RoseForest;
+    use FlixSandbox.RoseTree.{Node};
 
 
     pub type alias PreorderRow[k, v] = (k, v, k)
@@ -63,10 +63,10 @@ namespace RelLib/UnboundedTree {
     /// Note - we build a forest, so synthesize a root node unless we have a singleton.
     pub def printAsTree(rootKey: k, extractor: TreeRowExtractor[row, k, v], arr: Array[row]): Unit & Impure with Eq[k], ToString[v] = 
         match unboundForest(rootKey, extractor, arr) { 
-            case t1 :: Nil => Data/RoseTree.map(ToString.toString, t1) |> Data/RoseTree.drawTree |> println
+            case t1 :: Nil => FlixSandbox/RoseTree.map(ToString.toString, t1) |> FlixSandbox/RoseTree.drawTree |> println
             case trees => 
-                Node("Root", List.map(Data/RoseTree.map(ToString.toString), trees))
-                    |> Data/RoseTree.drawTree
+                Node("Root", List.map(FlixSandbox/RoseTree.map(ToString.toString), trees))
+                    |> FlixSandbox/RoseTree.drawTree
                     |> println
         }
 

@@ -37,6 +37,9 @@ namespace RelLib/Lattice/Longest {
 
     pub def longest(x: a): Longest[a] with LongerThan[a] = Longest(x)
 
+
+    pub def longest2(x: a, y: a): Longest[a] with LongerThan[a] = if (y `RelLib/Lattice/Longest/LongerThan.longerThan` x) Longest(y) else Longest(x)
+
     pub def getValue(x: Longest[a]): Option[a] = match x {
         case Top         => None
         case Longest(x1) => Some(x1)

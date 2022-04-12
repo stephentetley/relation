@@ -12,7 +12,7 @@ namespace TestTree2 {
         use Result.flatMap;
         paths() |> List.foreach(println);
         let* tree1 = paths() |> List.toArray |> RelLib/Tree2.buildTree;
-        Data/RoseTree.drawTree(tree1) |> println;
+        FlixSandbox/RoseTree.drawTree(tree1) |> println;
         Ok()
 
     def paths(): List[Path] = 
