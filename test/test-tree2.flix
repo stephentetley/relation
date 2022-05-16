@@ -7,11 +7,12 @@ namespace TestTree2 {
     use RelLib/Tree2.{Path};
 
 
+
     @test
     def test01(): Result[Unit, String] & Impure = 
         use Result.flatMap;
         paths() |> List.foreach(println);
-        let* tree1 = paths() |> List.toArray |> RelLib/Tree2.buildTree;
+        let* tree1 = paths() |> flip(List.toArray, static) |> RelLib/Tree2.buildTree;
         FlixSandbox/RoseTree.drawTree(tree1) |> println;
         Ok()
 
@@ -24,6 +25,7 @@ namespace TestTree2 {
         let p6 = RelLib/Tree2.path4(("WETHE", "WETHE-CAA", "WETHE-CAA-NET", "WETHE-CAA-NET-TEL"));
         let p7 = RelLib/Tree2.path4(("WETHE", "WETHE-E", "", ""));
         p1 :: p2 :: p3 :: p4 :: p5 :: p6 :: p7 ::Nil
+
 
 
 }

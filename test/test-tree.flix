@@ -7,6 +7,7 @@ namespace TestTree {
     use RelLib/Tree.Level3;
     use RelLib/Tree.Level3.{RootOf3, Level1Of3, Level2Of3, Level3Of3};
 
+
     @test
     def testAll(): Int32 & Impure = 
         Console.printLine("Running...");

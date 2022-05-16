@@ -33,7 +33,7 @@ namespace RelLib/Organization {
 
     pub def intoMapArray(f: a -> k & ef, g: a -> b & ef, arr: Array[a]): Map[k, Array[b]] & Impure with Order[k] = 
         intoMapWith(f, Nil, (x1, xs) -> {let v1 = g(x1); v1 :: xs}, arr)
-            |> Map.map(List.toArray)
+            |> Map.map(flip(List.toArray, static))
 
     pub def intoMapSet(f: a -> k & ef, g: a -> b & ef, arr: Array[a]): Map[k, Set[b]] & Impure with Order[k], Order[b] = 
         intoMapWith(f, Set.empty(), (x1, s) -> {let v1 = g(x1); Set.insert(v1, s)}, arr)
