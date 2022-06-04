@@ -24,7 +24,7 @@ namespace RelLib {
     /// We use an Impure continuation so we can internally cast the `ef` of operations and not lose
     /// impurity information.
     ///
-    pub opaque type Writer[ka: Type, w: SchemaRow, a: Type] = (a -> #{| w} -> ka & Impure) -> ka & Impure
+    pub enum Writer[ka: Type, w: SchemaRow, a: Type]((a -> #{| w} -> ka & Impure) -> ka & Impure)
 
 
     instance Functor[Writer[ka, w]] {
