@@ -18,7 +18,7 @@
 
 namespace RelLib/Lattice/PowerSet {
 
-    pub opaque type PowerSet[a] with ToString, Boxable = Set[a]
+    pub enum PowerSet[a](Set[a]) with ToString, Boxable
 
     instance Eq[PowerSet[a]] with Order[a] {
         pub def eq(x: PowerSet[a], y: PowerSet[a]): Bool = match (x, y) {
