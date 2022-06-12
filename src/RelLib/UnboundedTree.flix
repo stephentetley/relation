@@ -37,7 +37,9 @@ namespace RelLib/UnboundedTree {
 
 
     /// `rootKey` is the parent key of the topmost element(s), it should not be present as an item key.
-    pub def unboundForest(rootKey: k, extractor: TreeRowExtractor[row, k, v], rows: Array[row]): RoseForest[v] & Impure with Eq[k] =  
+    pub def unboundForest(rootKey: k, 
+                            extractor: TreeRowExtractor[row, k, v], 
+                            rows: Array[row, r]): RoseForest[v] \ Read(r) with Eq[k] =  
         treesList(rootKey, extractor, Array.toList(rows), (xs, _) -> xs) 
 
 
@@ -61,7 +63,9 @@ namespace RelLib/UnboundedTree {
         }
 
     /// Note - we build a forest, so synthesize a root node unless we have a singleton.
-    pub def printAsTree(rootKey: k, extractor: TreeRowExtractor[row, k, v], arr: Array[row]): Unit & Impure with Eq[k], ToString[v] = 
+    pub def printAsTree(rootKey: k, 
+                        extractor: TreeRowExtractor[row, k, v], 
+                        arr: Array[row, r]): Unit \ { Impure, Read(r) } with Eq[k], ToString[v] = 
         match unboundForest(rootKey, extractor, arr) { 
             case t1 :: Nil => FlixSandbox/RoseTree.map(ToString.toString, t1) |> FlixSandbox/RoseTree.drawTree |> println
             case trees => 

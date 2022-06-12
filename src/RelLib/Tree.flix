@@ -38,13 +38,13 @@ namespace RelLib/Tree {
 
 
     
-    def genKids2(node1: (a, List[b]) -> RoseTree[c] & ef, groups: Map[a, List[b]]): List[RoseTree[c]] & Impure with Order[a]  = 
-        let dskids = Map.foldLeftWithKey((ds, k, v) -> Chain.snoc(ds, node1(k, v) as & Impure), Chain.empty(), groups);
+    def genKids2(node1: (a, List[b]) -> RoseTree[c] & ef, groups: Map[a, List[b]]): List[RoseTree[c]] & ef with Order[a]  = 
+        let dskids = Map.foldLeftWithKey((ds, k, v) -> Chain.snoc(ds, node1(k, v)), Chain.empty(), groups);
         Chain.toList(dskids)
 
     
     /// We want this exposed by the API to support printing to HTML, maybe JSON etc.
-    pub def tree2(arr: Array[(a, b)]): RoseTree[Level2[a, b]] & Impure with Order[a]  =
+    pub def tree2(arr: Array[(a, b), r]): RoseTree[Level2[a, b]] \ Read(r) with Order[a]  =
         let m1 = RelLib/Organization.intoMapList(fst, snd, arr); 
         Node(RootOf2, genKids2((x1, kids) -> Node(Level1Of2(x1), List.map(x2 -> Node(Level2Of2(x2), Nil), kids)), m1))
 
@@ -57,10 +57,11 @@ namespace RelLib/Tree {
         FlixSandbox/RoseTree.map(nodeToString, tree)
             |> FlixSandbox/RoseTree.drawTree
 
-    pub def printAsTree2(arr: Array[(a, b)]): Unit & Impure with Order[a], ToString[a], ToString[b] = 
+    pub def printAsTree2(arr: Array[(a, b), r]): Unit \ {Impure, Read(r)} with Order[a], ToString[a], ToString[b] = 
         tree2(arr) 
             |> drawTree2("Root") 
             |> println
+
 
     /// Tree3
 
@@ -80,14 +81,16 @@ namespace RelLib/Tree {
         }
     }
 
-    pub def tree3(arr: Array[(a, b, c)]): RoseTree[Level3[a, b, c]] & Impure with Order[a], Order[b]  = 
-        let getKey  = RelLib/Tuple.decons3((x1, _, _) -> x1);
-        let getBody = RelLib/Tuple.decons3((_, x2, x3) -> (x2, x3));
-        let groups  = RelLib/Organization.intoMapList(getKey, getBody, arr);
-        let kids    = genKids2((x1, ks) -> Node(Level1Of3(x1), tree3GenLevel2(List.toArray(ks, static))), groups);
-        Node(RootOf3, kids)
+    pub def tree3(arr: Array[(a, b, c), r]): RoseTree[Level3[a, b, c]] \ Read(r) with Order[a], Order[b]  = 
+        region r1 {
+            let getKey  = RelLib/Tuple.decons3((x1, _, _) -> x1);
+            let getBody = RelLib/Tuple.decons3((_, x2, x3) -> (x2, x3));
+            let groups  = RelLib/Organization.intoMapList(getKey, getBody, arr);
+            let kids    = genKids2((x1, ks) -> Node(Level1Of3(x1), tree3GenLevel2(List.toArray(ks, r1))), groups);
+            Node(RootOf3, kids)
+        }
 
-    def tree3GenLevel2(arr: Array[(b, c)]): List[RoseTree[Level3[a, b, c]]] & Impure with Order[b] = 
+    def tree3GenLevel2(arr: Array[(b, c), r]): List[RoseTree[Level3[a, b, c]]] \ Read(r) with Order[b] = 
         let groups = RelLib/Organization.intoMapList(fst, snd, arr); 
         genKids2((x1, kids) -> Node(Level2Of3(x1), List.map(x2 -> Node(Level3Of3(x2), Nil), kids)), groups)
 
@@ -101,7 +104,7 @@ namespace RelLib/Tree {
         FlixSandbox/RoseTree.map(nodeToString, tree)
             |> FlixSandbox/RoseTree.drawTree
 
-    pub def printAsTree3(arr: Array[(a, b, c)]): Unit & Impure with Order[a], Order[b], ToString[a], ToString[b], ToString[c] = 
+    pub def printAsTree3(arr: Array[(a, b, c), r]): Unit \ { Impure, Read(r) } with Order[a], Order[b], ToString[a], ToString[b], ToString[c] = 
         tree3(arr) 
             |> drawTree3("Root") 
             |> println
@@ -126,18 +129,20 @@ namespace RelLib/Tree {
         }
     }
 
-    pub def tree4(arr: Array[(a, b, c, d)]): RoseTree[Level4[a, b, c, d]] & Impure with Order[a], Order[b], Order[c]  = 
-        let getKey  = RelLib/Tuple.decons4((x1, _, _, _) -> x1);
-        let getBody = RelLib/Tuple.decons4((_, x2, x3, x4) -> (x2, (x3, x4)));
-        let groups  = RelLib/Organization.intoMapList(getKey, getBody, arr);
-        let kids    = genKids2((x1, ks) -> Node(Level1Of4(x1), tree4GenLevel2(List.toArray(ks, static))), groups);
-        Node(RootOf4, kids)
+    pub def tree4(arr: Array[(a, b, c, d), r]): RoseTree[Level4[a, b, c, d]] \ Read(r) with Order[a], Order[b], Order[c]  = 
+        region r1 { 
+            let getKey  = RelLib/Tuple.decons4((x1, _, _, _) -> x1);
+            let getBody = RelLib/Tuple.decons4((_, x2, x3, x4) -> (x2, (x3, x4)));
+            let groups  = RelLib/Organization.intoMapList(getKey, getBody, arr);
+            let kids    = genKids2((x1, ks) -> Node(Level1Of4(x1), tree4GenLevel2(List.toArray(ks, r1), r1)), groups);
+            Node(RootOf4, kids)
+        }
 
-    def tree4GenLevel2(arr: Array[(b, (c, d))]): List[RoseTree[Level4[a, b, c, d]]] & Impure with Order[b], Order[c] = 
+    def tree4GenLevel2(arr: Array[(b, (c, d)), r1], r: Region[r2]): List[RoseTree[Level4[a, b, c, d]]] \ { Read(r1), Write(r2) } with Order[b], Order[c] = 
         let groups = RelLib/Organization.intoMapList(fst, snd, arr); 
-        genKids2((x1, kids) -> Node(Level2Of4(x1), tree4GenLevel3(List.toArray(kids, static))), groups)
+        genKids2((x1, kids) -> Node(Level2Of4(x1), tree4GenLevel3(List.toArray(kids, r))), groups)
 
-    def tree4GenLevel3(arr: Array[(c, d)]): List[RoseTree[Level4[a, b, c, d]]] & Impure with  Order[c] = 
+    def tree4GenLevel3(arr: Array[(c, d), r]): List[RoseTree[Level4[a, b, c, d]]] \ Read(r) with  Order[c] = 
         let groups = RelLib/Organization.intoMapList(fst, snd, arr); 
         genKids2((x1, kids) -> Node(Level3Of4(x1), List.map(x2 -> Node(Level4Of4(x2), Nil), kids)), groups)
 
@@ -152,7 +157,7 @@ namespace RelLib/Tree {
         FlixSandbox/RoseTree.map(nodeToString, tree)
             |> FlixSandbox/RoseTree.drawTree
 
-    pub def printAsTree4(arr: Array[(a, b, c, d)]): Unit & Impure with Order[a], Order[b], Order[c], ToString[a], ToString[b], ToString[c], ToString[d] = 
+    pub def printAsTree4(arr: Array[(a, b, c, d), r]): Unit \ { Impure, Read(r) } with Order[a], Order[b], Order[c], ToString[a], ToString[b], ToString[c], ToString[d] = 
         tree4(arr) 
             |> drawTree4("Root") 
             |> println
@@ -180,22 +185,24 @@ namespace RelLib/Tree {
     }
 
 
-    pub def tree5(arr: Array[(a, b, c, d, e)]): RoseTree[Level5[a, b, c, d, e]] & Impure with Order[a], Order[b], Order[c], Order[d] = 
-        let getKey  = RelLib/Tuple.decons5((x1, _, _, _, _) -> x1);
-        let getBody = RelLib/Tuple.decons5((_, x2, x3, x4, x5) -> (x2, (x3, (x4, x5))));
-        let groups  = RelLib/Organization.intoMapList(getKey, getBody, arr);
-        let kids    = genKids2((x1, ks) -> Node(Level1Of5(x1), tree5GenLevel2(List.toArray(ks, static))), groups);
-        Node(RootOf5, kids)
+    pub def tree5(arr: Array[(a, b, c, d, e), r]): RoseTree[Level5[a, b, c, d, e]] \ Read(r) with Order[a], Order[b], Order[c], Order[d] = 
+        region r1 {
+            let getKey  = RelLib/Tuple.decons5((x1, _, _, _, _) -> x1);
+            let getBody = RelLib/Tuple.decons5((_, x2, x3, x4, x5) -> (x2, (x3, (x4, x5))));
+            let groups  = RelLib/Organization.intoMapList(getKey, getBody, arr);
+            let kids    = genKids2((x1, ks) -> Node(Level1Of5(x1), tree5GenLevel2(List.toArray(ks, r1), r1)), groups);
+            Node(RootOf5, kids)
+        }
 
-    def tree5GenLevel2(arr: Array[(b, (c, (d, e)))]): List[RoseTree[Level5[a, b, c, d, e]]] & Impure with Order[b], Order[c], Order[d] = 
+    def tree5GenLevel2(arr: Array[(b, (c, (d, e))), r1], r: Region[r2]): List[RoseTree[Level5[a, b, c, d, e]]] \ { Read(r1), Write(r2) } with Order[b], Order[c], Order[d] = 
         let groups = RelLib/Organization.intoMapList(fst, snd, arr); 
-        genKids2((x1, kids) -> Node(Level2Of5(x1), tree5GenLevel3(List.toArray(kids, static))), groups)
+        genKids2((x1, kids) -> Node(Level2Of5(x1), tree5GenLevel3(List.toArray(kids, r), r)), groups)
 
-    def tree5GenLevel3(arr: Array[(c, (d, e))]): List[RoseTree[Level5[a, b, c, d, e]]] & Impure with Order[c], Order[d] = 
+    def tree5GenLevel3(arr: Array[(c, (d, e)), r1], r: Region[r2]): List[RoseTree[Level5[a, b, c, d, e]]] \ { Read(r1), Write(r2) } with Order[c], Order[d] = 
         let groups = RelLib/Organization.intoMapList(fst, snd, arr); 
-        genKids2((x1, kids) -> Node(Level3Of5(x1), tree5GenLevel4(List.toArray(kids, static))), groups)
+        genKids2((x1, kids) -> Node(Level3Of5(x1), tree5GenLevel4(List.toArray(kids, r))), groups)
 
-    def tree5GenLevel4(arr: Array[(d, e)]): List[RoseTree[Level5[a, b, c, d, e]]] & Impure with  Order[d] = 
+    def tree5GenLevel4(arr: Array[(d, e), r]): List[RoseTree[Level5[a, b, c, d, e]]] \ Read(r) with Order[d] = 
         let groups = RelLib/Organization.intoMapList(fst, snd, arr); 
         genKids2((x1, kids) -> Node(Level4Of5(x1), List.map(x2 -> Node(Level5Of5(x2), Nil), kids)), groups)
 
@@ -213,7 +220,7 @@ namespace RelLib/Tree {
             |> FlixSandbox/RoseTree.drawTree
 
 
-    pub def printAsTree5(arr: Array[(a, b, c, d, e)]): Unit & Impure with Order[a], Order[b], Order[c], Order[d], ToString[a], ToString[b], ToString[c], ToString[d], ToString[e] = 
+    pub def printAsTree5(arr: Array[(a, b, c, d, e), r]): Unit \ {Impure, Read(r)} with Order[a], Order[b], Order[c], Order[d], ToString[a], ToString[b], ToString[c], ToString[d], ToString[e] =  
         tree5(arr) 
             |> drawTree5("Root") 
             |> println
