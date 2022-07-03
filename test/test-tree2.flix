@@ -11,7 +11,7 @@ namespace TestTree2 {
         use Result.flatMap;
         region r {
             paths() |> List.foreach(println);
-            let* tree1 = paths() |> flip(List.toArray, r) |> RelLib/Tree2.buildTree;
+            let* tree1 = paths() |> List.toArray(r) |> RelLib/Tree2.buildTree;
             FlixSandbox/RoseTree.drawTree(tree1) |> println;
             Ok()
         }

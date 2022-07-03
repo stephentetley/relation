@@ -40,7 +40,7 @@ namespace RelLib/Organization {
                             arr: Array[a, r1], 
                             r: Region[r2]): Map[k, Array[b, r2]] \ { ef1, ef2, Read(r1), Write(r2) } with Order[k] = 
         intoMapWith(f, Nil, (x1, xs) -> {let v1 = g(x1); v1 :: xs}, arr)
-            |> Map.map(flip(List.toArray, r))
+            |> Map.map(List.toArray(r))
 
     pub def intoMapSet(f: a -> k & ef1, 
                         g: a -> b & ef2, 
